@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--todo  这个地方可以放置任何的布局   都可以进行上下滚动-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:orientation="vertical" >
+    <TextView 
+        android:id="@+id/tv_title"
+        android:gravity="center_vertical"
+        android:textSize="20sp"
+        android:text="Title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+
+
+
+    <ImageView
+        android:id="@+id/tv_content"
+        android:gravity="center_vertical"
+        android:textSize="20sp"
+        android:text="Content"
+        android:src="@mipmap/ic_launcher"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"/>
+
+</LinearLayout>
