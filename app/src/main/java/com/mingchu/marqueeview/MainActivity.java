@@ -8,14 +8,22 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+
+    private List<MarqueeBean> mMarqueeBeen = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initData();
+
         AutoScrollListView listView = (AutoScrollListView) findViewById(R.id.list_view);
-        listView.setAdapter(new AutoScrollAdapter());
+        listView.setAdapter(new AutoScrollAdapter(mMarqueeBeen,this));
         listView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
@@ -35,5 +43,25 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void initData() {
+        MarqueeBean beanOne = new MarqueeBean();
+        beanOne.setTitle("你要帮助我哈");
+        beanOne.setSubtitle("我为啥要帮助你,你说呢");
+        beanOne.setImgurl("http://icon.xinliji.me//avatar_0_63.png");
+        mMarqueeBeen.add(beanOne);
+
+        MarqueeBean beanTwo = new MarqueeBean();
+        beanTwo.setTitle("你是不是傻");
+        beanTwo.setSubtitle("我就是傻,你能怎么着呢");
+        beanTwo.setImgurl("http://icon.xinliji.me//avatar_0_63.png");
+        mMarqueeBeen.add(beanTwo);
+
+        MarqueeBean beanThree = new MarqueeBean();
+        beanThree.setTitle("鸣狐工作");
+        beanThree.setSubtitle("这样的工作就是好");
+        beanThree.setImgurl("http://icon.xinliji.me//avatar_0_63.png");
+        mMarqueeBeen.add(beanThree);
     }
 }

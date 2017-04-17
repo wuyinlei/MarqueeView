@@ -1,29 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--todo  这个地方可以放置任何的布局   都可以进行上下滚动-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    android:orientation="vertical" >
-    <TextView 
-        android:id="@+id/tv_title"
-        android:gravity="center_vertical"
-        android:textSize="20sp"
-        android:text="Title"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="270dp"
+                android:layout_height="100dp"
+                android:background="#ff9988"
+                android:orientation="vertical"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
 
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@+id/iv_content"
+        android:text="Title"
+        android:textSize="18sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        tools:ignore="RtlHardcoded"/>
+
+
+    <TextView
+        android:id="@+id/tv_sub_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/iv_content"
+        android:text="Title"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="14sp"
+        tools:ignore="RtlHardcoded"/>
 
 
     <ImageView
-        android:id="@+id/tv_content"
+        android:id="@+id/iv_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:visibility="visible"
+        android:layout_centerVertical="true"
         android:gravity="center_vertical"
-        android:textSize="20sp"
-        android:text="Content"
-        android:src="@mipmap/ic_launcher"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"/>
+        />
 
-</LinearLayout>
+</RelativeLayout>

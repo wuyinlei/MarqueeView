@@ -27,7 +27,7 @@ public class AutoScrollListView extends ListView {
     public @interface ScrollOritation {
     }
 
-    private static int DALY_TIME = 3000;  //延时滚动时间
+    private static int DALY_TIME = 5000;  //延时滚动时间
 
     private LoopRunnable mLoopRunnable;
 
@@ -90,8 +90,8 @@ public class AutoScrollListView extends ListView {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (mAutoScroll && mOutterAdapter != null) {
             AutoScroll autoScroll = (AutoScroll) mOutterAdapter;
-            int height = autoScroll.getListItemHeight(getContext()) * autoScroll.getImmovableCount()
-                    + (autoScroll.getImmovableCount() - 1) * getDividerHeight();
+            int height = autoScroll.getListItemHeight(getContext()) * autoScroll.getVisiableCount()
+                    + (autoScroll.getVisiableCount() - 1) * getDividerHeight();
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -180,12 +180,12 @@ public class AutoScrollListView extends ListView {
         int firstVisiblePosition = getFirstVisiblePosition();
         if (firstVisiblePosition == 0) {
             AutoScroll autoScroll = (AutoScroll) mInnerAdapter;
-            targetPosition = mInnerAdapter.getCount() - autoScroll.getImmovableCount() * 2;
+            targetPosition = mInnerAdapter.getCount() - autoScroll.getVisiableCount() * 2;
         }
         int lastVisiblePosition = getLastVisiblePosition();
         if (lastVisiblePosition == getCount() - 1) {
             AutoScroll autoScroll = (AutoScroll) mOutterAdapter;
-            targetPosition = autoScroll.getImmovableCount();
+            targetPosition = autoScroll.getVisiableCount();
         }
         if (targetPosition >= 0 && firstVisiblePosition != targetPosition) {
             setSelection(targetPosition);
@@ -272,7 +272,7 @@ public class AutoScrollListView extends ListView {
         @Override
         public int getCount() {
             return mOutterAdapter == null ? 0 :
-                    (mAutoScroll ? mOutterAdapter.getCount() + ((AutoScroll) mOutterAdapter).getImmovableCount() * 2 : mOutterAdapter.getCount());
+                    (mAutoScroll ? mOutterAdapter.getCount() + ((AutoScroll) mOutterAdapter).getVisiableCount() * 2 : mOutterAdapter.getCount());
         }
 
         @Override
@@ -284,7 +284,7 @@ public class AutoScrollListView extends ListView {
         public long getItemId(int position) {
             if (mAutoScroll) {
                 AutoScroll autoScroll = (AutoScroll) mOutterAdapter;
-                int immovableCount = autoScroll.getImmovableCount();
+                int immovableCount = autoScroll.getVisiableCount();
                 int outerCount = mOutterAdapter.getCount();
                 if (position < immovableCount) {//第一组
                     return outerCount - immovableCount + position;
@@ -336,7 +336,7 @@ public class AutoScrollListView extends ListView {
          *
          * @return 可见个数
          */
-        public int getImmovableCount();
+        public int getVisiableCount();
 
         /**
          * 获取条目高度
