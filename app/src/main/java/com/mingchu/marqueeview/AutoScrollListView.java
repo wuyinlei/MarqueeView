@@ -29,10 +29,12 @@ public class AutoScrollListView extends ListView {
 
     private static int DALY_TIME = 5000;  //延时滚动时间
 
+    //线程管理类  需要用线程来管理
     private LoopRunnable mLoopRunnable;
 
     private boolean mAnimating = false;
 
+    //滚动工具类
     private Scroller mScroller;
 
     private InnerAdapter mInnerAdapter;
@@ -77,9 +79,9 @@ public class AutoScrollListView extends ListView {
 
     public AutoScrollListView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mLoopRunnable = new LoopRunnable();
-        mScroller = new Scroller(context, new AccelerateInterpolator());
-        mInnerAdapter = new InnerAdapter();
+        mLoopRunnable = new LoopRunnable();  //初始化
+        mScroller = new Scroller(context, new AccelerateInterpolator());  //scroller初始化
+        mInnerAdapter = new InnerAdapter();  //InnerAdapter初始化
     }
 
     public AutoScrollListView(Context context, AttributeSet attrs, int defStyle) {
@@ -90,6 +92,7 @@ public class AutoScrollListView extends ListView {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (mAutoScroll && mOutterAdapter != null) {
             AutoScroll autoScroll = (AutoScroll) mOutterAdapter;
+            //高度测量
             int height = autoScroll.getListItemHeight(getContext()) * autoScroll.getVisiableCount()
                     + (autoScroll.getVisiableCount() - 1) * getDividerHeight();
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
@@ -136,19 +139,20 @@ public class AutoScrollListView extends ListView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         Log.i("AutoScrollListView", "onAttachedToWindow");
-        postDelayed(mLoopRunnable, DALY_TIME);
-        mAnimating = true;
+        postDelayed(mLoopRunnable, DALY_TIME);  //在依附于window的时候开始循环
+        mAnimating = true; //有动画
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         Log.i("AutoScrollListView", "onDetachedFromWindow");
-        removeCallbacks(mLoopRunnable);
+        removeCallbacks(mLoopRunnable);  //移除线程  防止内存泄漏
     }
 
     int preY = 0;
 
+    //在这个函数里我们可以去取得事先设置好的成员变量mScroller中的位置信息、速度信息
     @Override
     public void computeScroll() {
         Log.i("AutoScrollListView", "computeScroll");
@@ -178,7 +182,7 @@ public class AutoScrollListView extends ListView {
      * 检测位置信息
      */
     private void checkPosition() {
-        if (!mAutoScroll) return;
+        if (!mAutoScroll) return;  //不是自动滚动
         int targetPosition = -1;
         int firstVisiblePosition = getFirstVisiblePosition();
         if (firstVisiblePosition == 0) {
@@ -191,7 +195,7 @@ public class AutoScrollListView extends ListView {
             targetPosition = autoScroll.getVisiableCount();
         }
         if (targetPosition >= 0 && firstVisiblePosition != targetPosition) {
-            setSelection(targetPosition);
+            setSelection(targetPosition);  //设置选择的item
         }
     }
 
@@ -249,8 +253,8 @@ public class AutoScrollListView extends ListView {
         if (!mScroller.isFinished()) {
             mScroller.abortAnimation();
         }
-        removeCallbacks(mLoopRunnable);
-        mAnimating = false;
+        removeCallbacks(mLoopRunnable); //移除线程
+        mAnimating = false; //动画停止
     }
 
     /**
@@ -262,9 +266,11 @@ public class AutoScrollListView extends ListView {
         public void run() {
             Log.i("AutoScrollListView", "run");
             mAnimating = true;
-            View childAt = getChildAt(0);
-            int scrollHeight = childAt.getMeasuredHeight() + getDividerHeight();
+            View childAt = getChildAt(0);  //获取到第一个子view
+            int scrollHeight = childAt.getMeasuredHeight() + getDividerHeight(); //获取到滚动的高度  自身高度+分隔线高度
+            //开始移动
             mScroller.startScroll(0, 0, 0, mScrollOrientation == SCROLL_UP ? scrollHeight : -scrollHeight);
+            //重新绘制
             invalidate();
         }
 
@@ -274,8 +280,13 @@ public class AutoScrollListView extends ListView {
 
         @Override
         public int getCount() {
+            //首先  是否是自动滚动
+            // 如果是  数量是mOutterAdapter.getCount()+((AutoScroll) mOutterAdapter).getVisiableCount() * 2
+            // 如果不是自动滚动   mOutterAdapter.getCount()
             return mOutterAdapter == null ? 0 :
-                    (mAutoScroll ? mOutterAdapter.getCount() + ((AutoScroll) mOutterAdapter).getVisiableCount() * 2 : mOutterAdapter.getCount());
+                    (mAutoScroll ? mOutterAdapter.getCount() +
+                            ((AutoScroll) mOutterAdapter).getVisiableCount() * 2
+                            : mOutterAdapter.getCount());
         }
 
         @Override
@@ -287,13 +298,27 @@ public class AutoScrollListView extends ListView {
         public long getItemId(int position) {
             if (mAutoScroll) {
                 AutoScroll autoScroll = (AutoScroll) mOutterAdapter;
+                //可见的个数 2
                 int immovableCount = autoScroll.getVisiableCount();
-                int outerCount = mOutterAdapter.getCount();
+                //外部的  没有显示的view的个数
+                int outerCount = mOutterAdapter.getCount();  //3
+
+                Log.d("InnerAdapter", "immovableCount:" + immovableCount);
+
+                Log.d("InnerAdapter", "outerCount:" + outerCount);
+                //如果当前的位置小于可见的数量   比如  显示1个  当前为0
                 if (position < immovableCount) {//第一组
+                    Log.d("InnerAdapter", "第一组position:" + position);
+                    //那么返回的就是  position=0  返回1  position = 1  返回2
                     return outerCount - immovableCount + position;
+                    //如果 1  1  3
                 } else if (position < immovableCount + outerCount) {//第二组
+                    Log.d("InnerAdapter", "第二组position:" + position);
+                    //显示0  position= 2  返回0
                     return position - immovableCount;
                 } else {//第三组
+                    //显示 2  1  3
+                    Log.d("InnerAdapter", "第三组position:" + position);
                     return position - (immovableCount + outerCount);
                 }
             } else {

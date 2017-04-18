@@ -74,13 +74,14 @@ public class AutoScrollAdapter extends BaseAdapter implements AutoScrollListView
 
 	@Override
 	public int getListItemHeight(Context context) {
+		//在这里我们要获取到我们的布局的高度  才能实现一些
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, context.getResources().getDisplayMetrics());
 	}
 
 
 	@Override
 	public int getVisiableCount() {
-		return 2;  //显示滚动的item 的个数
+		return 1;  //显示滚动的item 的个数
 	}
 
 	class ViewHolder{

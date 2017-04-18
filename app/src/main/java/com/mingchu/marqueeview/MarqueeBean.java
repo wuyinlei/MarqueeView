@@ -8,8 +8,11 @@ package com.mingchu.marqueeview;
 
 public class MarqueeBean {
 
+    //标题
     private String title;
+    //子标题
     private String subtitle;
+    //图片地址
     private String imgurl;
 
     public String getTitle() {
