@@ -3,7 +3,7 @@
 <!--todo  这个地方可以放置任何的布局   都可以进行上下滚动-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="270dp"
+                android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:background="#ff9988"
                 android:orientation="vertical"

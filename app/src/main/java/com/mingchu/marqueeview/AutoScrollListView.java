@@ -174,6 +174,9 @@ public class AutoScrollListView extends ListView {
         }
     }
 
+    /**
+     * 检测位置信息
+     */
     private void checkPosition() {
         if (!mAutoScroll) return;
         int targetPosition = -1;
