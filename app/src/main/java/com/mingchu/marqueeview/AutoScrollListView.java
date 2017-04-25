@@ -88,10 +88,12 @@ public class AutoScrollListView extends ListView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (mAutoScroll && mOutterAdapter != null) {
-            AutoScroll autoScroll = (AutoScroll) mOutterAdapter;
+        if (mAutoScroll && mOutterAdapter != null) { //如果是自动滚动和当前的adapter不为空
+            AutoScroll autoScroll = (AutoScroll) mOutterAdapter; //
+            //获取到高度  也就是滚动的view的高度
             int height = autoScroll.getListItemHeight(getContext()) * autoScroll.getVisiableCount()
                     + (autoScroll.getVisiableCount() - 1) * getDividerHeight();
+            //进行测量
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -152,25 +154,40 @@ public class AutoScrollListView extends ListView {
     @Override
     public void computeScroll() {
         Log.i("AutoScrollListView", "computeScroll");
-        if (!mScroller.computeScrollOffset()) {
+
+        // 如果返回true，表示动画还没有结束
+        // 因为前面startScroll，所以只有在startScroll完成时 才会为false
+        if (!mScroller.computeScrollOffset()) {  //没有
             Log.i("AutoScrollListView", "compute finish");
             if (mAnimating) {
                 Log.i("AutoScrollListView", "compute ignore runnable");
                 return;
             }
             Log.i("AutoScrollListView", "compute send runnable");
-            removeCallbacks(mLoopRunnable);
-            postDelayed(mLoopRunnable, DALY_TIME);
+            removeCallbacks(mLoopRunnable);  //移除
+            postDelayed(mLoopRunnable, DALY_TIME); //重新发送
             mAnimating = true;
             preY = 0;
+
+            //检测当前的位置,防止位置错乱
             checkPosition();
-        } else {
-            mAnimating = false;
+        } else {  //动画没有结束
+            mAnimating = false;  //动画标志置为false
             Log.i("AutoScrollListView", "compute not finish");
-            int dY = mScroller.getCurrY() - preY;
-            ListViewCompat.scrollListBy(this, dY);
-            preY = mScroller.getCurrY();
-            invalidate();
+            int dY = mScroller.getCurrY() - preY;  //获取到当前的y坐标
+            ///**
+            //* Scrolls the list items within the view by a specified number of pixels.
+            //        *
+            //* @param y the amount of pixels to scroll by vertically
+            //        * @see #canScrollList(int)
+            //*/
+            //   public void scrollListBy(int y) {
+            //      trackMotionScroll(-y, -y);
+            //    }
+            //ListView的item滚动距离y
+            ListViewCompat.scrollListBy(this, dY); //
+            preY = mScroller.getCurrY();  //获取到当前y
+            invalidate();  //滚动完成之后重新绘制
         }
     }
 
@@ -179,12 +196,15 @@ public class AutoScrollListView extends ListView {
      */
     private void checkPosition() {
         if (!mAutoScroll) return;
-        int targetPosition = -1;
+        int targetPosition = -1; //初始化目标位置
+        //第一个可见的view的位置
         int firstVisiblePosition = getFirstVisiblePosition();
         if (firstVisiblePosition == 0) {
+            //如果当前的所在的位置是第一个可见的view的位置,也就是第一个item
             AutoScroll autoScroll = (AutoScroll) mInnerAdapter;
             targetPosition = mInnerAdapter.getCount() - autoScroll.getVisiableCount() * 2;
         }
+        //最后一个item的位置
         int lastVisiblePosition = getLastVisiblePosition();
         if (lastVisiblePosition == getCount() - 1) {
             AutoScroll autoScroll = (AutoScroll) mOutterAdapter;
@@ -204,9 +224,11 @@ public class AutoScrollListView extends ListView {
             mPreY = ev.getY();
             mIgnoreLongClick = false;
         } else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
+            //移动的距离
             mMoveDistance += (Math.abs(ev.getX() - mPreX) + Math.abs(ev.getY() - mPreY));
             mPreX = ev.getX();
             mPreY = ev.getY();
+            //移动的距离大于指定值  并且当前的滚动还没有完成
             if (mMoveDistance > 20 || !mScroller.isFinished()) {
                 mIgnoreLongClick = true;
             }
@@ -214,6 +236,7 @@ public class AutoScrollListView extends ListView {
         } else if (ev.getAction() == MotionEvent.ACTION_UP
                 || ev.getAction() == MotionEvent.ACTION_CANCEL) {
             if (mMoveDistance > 20 || !mScroller.isFinished()) {
+                //取消长按时间
                 ev.setAction(MotionEvent.ACTION_CANCEL);
             }
             mIgnoreLongClick = false;
@@ -261,14 +284,17 @@ public class AutoScrollListView extends ListView {
         @Override
         public void run() {
             Log.i("AutoScrollListView", "run");
-            mAnimating = true;
-            View childAt = getChildAt(0);
+            mAnimating = true;  //线程启动的时候设置动画为ture
+            View childAt = getChildAt(0);  //获取到第一个子view
+            //得到滑动的高度  也就是当前可滑动的item的高度
             int scrollHeight = childAt.getMeasuredHeight() + getDividerHeight();
+            //然后进行滑动
             mScroller.startScroll(0, 0, 0, mScrollOrientation == SCROLL_UP ? scrollHeight : -scrollHeight);
-            invalidate();
+            invalidate(); //重新绘制
         }
 
     }
+
 
     class InnerAdapter extends BaseAdapter {
 

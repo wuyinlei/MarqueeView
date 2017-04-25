@@ -72,6 +72,7 @@ public class AutoScrollAdapter extends BaseAdapter implements AutoScrollListView
 		return convertView;
 	}
 
+	//获取到当前滚动视图的高度
 	@Override
 	public int getListItemHeight(Context context) {
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, context.getResources().getDisplayMetrics());
