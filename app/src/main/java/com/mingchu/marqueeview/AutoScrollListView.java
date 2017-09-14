@@ -185,10 +185,10 @@ public class AutoScrollListView extends ListView {
         if (!mAutoScroll) return;  //不是自动滚动
         int targetPosition = -1;
         int firstVisiblePosition = getFirstVisiblePosition();
-        if (firstVisiblePosition == 0) {
-            AutoScroll autoScroll = (AutoScroll) mInnerAdapter;
-            targetPosition = mInnerAdapter.getCount() - autoScroll.getVisiableCount() * 2;
-        }
+//        if (firstVisiblePosition == 0) {
+//            AutoScroll autoScroll = (AutoScroll) mInnerAdapter;
+//            targetPosition = mInnerAdapter.getCount() - autoScroll.getVisiableCount() * 2;
+//        }
         int lastVisiblePosition = getLastVisiblePosition();
         if (lastVisiblePosition == getCount() - 1) {
             AutoScroll autoScroll = (AutoScroll) mOutterAdapter;
@@ -330,6 +330,7 @@ public class AutoScrollListView extends ListView {
         public View getView(int position, View convertView, ViewGroup parent) {
             return mOutterAdapter.getView((int) getItemId(position), convertView, parent);
         }
+
 
     }
 

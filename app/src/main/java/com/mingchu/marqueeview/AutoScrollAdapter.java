@@ -81,7 +81,7 @@ public class AutoScrollAdapter extends BaseAdapter implements AutoScrollListView
 
 	@Override
 	public int getVisiableCount() {
-		return 1;  //显示滚动的item 的个数
+		return 3;  //显示滚动的item 的个数
 	}
 
 	class ViewHolder{
