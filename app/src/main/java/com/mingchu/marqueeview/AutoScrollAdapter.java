@@ -72,6 +72,7 @@ public class AutoScrollAdapter extends BaseAdapter implements AutoScrollListView
 		return convertView;
 	}
 
+	//获取到当前滚动视图的高度
 	@Override
 	public int getListItemHeight(Context context) {
 		//在这里我们要获取到我们的布局的高度  才能实现一些
